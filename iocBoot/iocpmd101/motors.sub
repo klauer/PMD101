@@ -1,0 +1,5 @@
+file "$(PMD101)/db/asyn_motor.db" {
+pattern
+{   P,  M,              DESC,      DTYP,DIR, VELO, VBAS, ACCL, BDST, BVEL, BACC, PORT, ADDR, MRES,  PREC, EGU, DHLM,  DLLM,   INIT}
+{IOC:PMD:, m1,     "motor 1", asynMotor,  0,     5,     5,    1,    0,    0,    0,    PMD1, 0,    0.001, 3,    um,  10000, -10000, 0}
+}

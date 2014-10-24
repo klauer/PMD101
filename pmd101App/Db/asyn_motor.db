@@ -1,0 +1,83 @@
+# Asyn motor database with autosave and enable/disable records
+
+record(motor,"$(P)$(M)")
+{
+    field(DESC,"$(DESC)")
+    field(DTYP,"$(DTYP)")
+    field(OUT,"@asyn($(PORT),$(ADDR))")
+    # Use of MRES is deliberate on the following line. 
+    # This sets the retry deadband to the smallest possible size.
+    field(RDBD,$(MRES="1"))
+    field(MRES,$(MRES="1"))
+    field(ERES,$(MRES="1"))
+    field(EGU,"$(EGU=None)")
+    field(PREC,$(PREC="6"))
+    field(VELO,$(VELO=""))
+    field(VBAS,$(VBAS=""))
+    field(ACCL,$(ACCL=""))
+    field(VMAX,$(VMAX=0))
+    field(BDST,$(BDST=""))
+    field(BVEL,$(BVEL=""))
+    field(BACC,$(BACC=""))
+    field(DHLM,$(DHLM=""))
+    field(DLLM,$(DLLM=""))
+    field(OFF,$(OFF=0))
+    field(RDBD,$(RDBD=0))
+    field(RTRY,$(RTRY=0))
+    # field(RLNK,$(RLNK=""))
+    # field(INIT,$(INIT=""))
+
+    info(autosaveFields_pass0, "DVAL DIR DHLM DLLM TWV SREV MRES ERES RRES VBAS VELO VMAX ACCL BDST BVEL BACC RDBD DESC EGU RTRY UEIP URIP DLY RDBL PREC DISA DISP FOFF OFF FRAC OMSL JVEL JAR PCOF ICOF DCOF HVEL NTM NTMF INIT")
+
+    info(autosaveFields, "DIR DHLM DLLM TWV SREV MRES ERES RRES VBAS VELO VMAX ACCL BDST BVEL BACC RDBD DESC EGU RTRY UEIP URIP DLY RDBL PREC DISA DISP FOFF OFF FRAC OMSL JVEL JAR PCOF ICOF DCOF HVEL NTM NTMF")
+}
+
+record(transform, "$(P)$(M)_ableput") {
+  field(CLCB, "a")
+  field(CLCC, "a")
+  field(OUTA, "$(P)$(M).DISA NPP NMS")
+  field(OUTB, "$(P)$(M).DISP NPP NMS")
+  field(OUTC, "$(P)$(M).DISA NPP NMS")
+}
+
+record(bo, "$(P)$(M)_able") {
+  field(DESC, "motor enable")
+  field(PINI, "YES")
+  field(OUT, "$(P)$(M)_ableput.A PP MS")
+  field(ZNAM, "Enable")
+  field(ONAM, "Disable")
+
+  info(autosaveFields_pass0, "VAL")
+}
+
+# allow users to change the velocity (or speed)
+# by sending a multipler to the
+#    $(P)$(M)_vCh.A field
+# Range check output; SBAS <= S <= SMAX.
+record(scalcout, "$(P)$(M)_vCh") {
+  field(DESC, "change velocity")
+  field(INPB, "$(P)$(M).S")
+  field(INPC, "$(P)$(M).SBAS")
+  field(INPD, "$(P)$(M).SMAX")
+  field(CALC, "min(max(a*b,c),d)")
+  field(OUT, "$(P)$(M).S")
+
+  info(autosaveFields_pass0, "VAL")
+}
+
+# allow users to change the tweak value
+# by sending a multipler to the
+#    $(P)$(M)_twCh.A field
+# Range check output; TWV <= HLM - LLM.
+record(scalcout, "$(P)$(M)_twCh") {
+  field(DESC, "change TWV")
+  field(INPB, "$(P)$(M).TWV")
+  field(INPC, "$(P)$(M).MRES")
+  field(INPD, "$(P)$(M).HLM")
+  field(INPE, "$(P)$(M).LLM")
+  field(CALC, "min(max(a*b,c),d-e)")
+  field(OUT, "$(P)$(M).TWV")
+
+  info(autosaveFields_pass0, "VAL")
+}
+

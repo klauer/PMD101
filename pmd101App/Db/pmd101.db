@@ -528,7 +528,7 @@ record(longout, "$(Sys)$(Dev)Cmd:RawOutputs-Out") {
 record(longout, "$(Sys)$(Dev)Cmd:ReadPins-Cmd") {
     field(DESC, "Read inputs/outputs")
     field(DTYP, "stream")
-    field(OUT,  "@pmd101.proto read_pins($(Sys)$(Dev)) $(PORT)")
+    field(OUT,  "@pmd101.proto get_pins($(Sys)$(Dev)) $(PORT)")
     field(PINI, "YES")
 
     info(autosaveFields_pass0, "VAL")
@@ -612,3 +612,294 @@ record(calc, "$(Sys)$(Dev)Val:Supply-I") {
     field(SCAN, "10 second")
 }
 
+## Parking
+record(longout, "$(Sys)$(Dev)Cmd:Park") {
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto park($(Sys)$(Dev)) $(PORT)")
+    field(PINI, "YES")
+    field(TPRO, $(DEBUG=0))
+
+    field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
+}
+
+record(longout, "$(Sys)$(Dev)Cmd:Unpark") {
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto unpark($(Sys)$(Dev)) $(PORT)")
+    field(PINI, "YES")
+    field(TPRO, $(DEBUG=0))
+
+    field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
+}
+
+## Flash initialization/reset to defaults
+record(longout, "$(Sys)$(Dev)Cmd:InitFlash") {
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto init_flash($(Sys)$(Dev)) $(PORT)")
+    field(PINI, "YES")
+    field(TPRO, $(DEBUG=0))
+
+    field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
+}
+
+record(longout, "$(Sys)$(Dev)Cmd:InitDefault") {
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto init_default($(Sys)$(Dev)) $(PORT)")
+    field(PINI, "YES")
+    field(TPRO, $(DEBUG=0))
+
+    field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
+}
+
+## External limit configuration
+record(mbbi, "$(Sys)$(Dev)Val:ExtLim-I") {
+    field(DESC, "External limit config")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),2) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(THVL, 3)
+
+    field(ZRST, "Disabled")
+    field(ONST, "Active low")
+    field(TWST, "Active low")
+    field(THST, "Active high")
+
+    field(PINI, "YES")
+}
+
+record(mbbo, "$(Sys)$(Dev)Cmd:ExtLim-Out") {
+    field(DESC, "setting")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),2) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(THVL, 3)
+
+    field(ZRST, "Disabled")
+    field(ONST, "Active low")
+    field(TWST, "Active low")
+    field(THST, "Active high")
+
+    field(FLNK, "$(Sys)$(Dev)Val:ExtLim-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+## Internal soft limits (A)
+record(longout, "$(Sys)$(Dev)Cmd:TgtLimA-Out") {
+    field(DESC, "Target soft lower limit A")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),3) $(PORT)")
+    field(EGU,  "Counts")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:TgtLimA-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:TgtLimA-I") {
+    field(DESC, "Target soft lower limit A")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),3) $(PORT)")
+    field(EGU,  "Counts")
+
+    field(PINI, "YES")
+}
+
+## Internal soft limits (B)
+record(longout, "$(Sys)$(Dev)Cmd:TgtLimB-Out") {
+    field(DESC, "Target soft lower limit B")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),4) $(PORT)")
+    field(EGU,  "Counts")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:TgtLimB-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:TgtLimB-I") {
+    field(DESC, "Target soft lower limit B")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),4) $(PORT)")
+    field(EGU,  "Counts")
+
+    field(PINI, "YES")
+}
+
+
+## Deadband (stop range)
+record(longout, "$(Sys)$(Dev)Cmd:Deadband-Out") {
+    field(DESC, "Closed-loop deadband")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),5) $(PORT)")
+    field(EGU,  "Counts")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:Deadband-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:Deadband-I") {
+    field(DESC, "Closed-loop deadband")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),5) $(PORT)")
+    field(EGU,  "Counts")
+
+    field(PINI, "YES")
+}
+
+
+## Encoder direction
+record(mbbi, "$(Sys)$(Dev)Val:EncDir-I") {
+    field(DESC, "External limit config")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),6) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+
+    field(ZRST, "Positive")
+    field(ONST, "Negative")
+
+    field(PINI, "YES")
+}
+
+record(mbbo, "$(Sys)$(Dev)Cmd:EncDir-Out") {
+    field(DESC, "setting")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),6) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+
+    field(ZRST, "Positive")
+    field(ONST, "Negative")
+
+    field(FLNK, "$(Sys)$(Dev)Val:EncDir-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+## Target mode minimum speed
+record(longout, "$(Sys)$(Dev)Cmd:MinSpd-Out") {
+    field(DESC, "Target mode min speed")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),7) $(PORT)")
+    field(EGU,  "wfm-steps/s")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:MinSpd-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:MinSpd-I") {
+    field(DESC, "Target mode min speed")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),7) $(PORT)")
+    field(EGU,  "wfm-steps/s")
+
+    field(PINI, "YES")
+}
+
+## Target mode max speed
+record(longout, "$(Sys)$(Dev)Cmd:MaxSpd-Out") {
+    field(DESC, "Target mode max speed")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),8) $(PORT)")
+    field(EGU,  "wfm-steps/s")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:MaxSpd-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:MaxSpd-I") {
+    field(DESC, "Target mode max speed")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),8) $(PORT)")
+    field(EGU,  "wfm-steps/s")
+
+    field(PINI, "YES")
+}
+
+## Target mode ramp up
+record(longout, "$(Sys)$(Dev)Cmd:RampUp-Out") {
+    field(DESC, "Target mode ramp up")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),9) $(PORT)")
+    field(EGU,  "wfm-steps/s-ms")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:RampUp-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:RampUp-I") {
+    field(DESC, "Target mode ramp up")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),9) $(PORT)")
+    field(EGU,  "wfm-steps/s-ms")
+
+    field(PINI, "YES")
+}
+
+## Target mode ramp down
+record(longout, "$(Sys)$(Dev)Cmd:RampDown-Out") {
+    field(DESC, "Target mode ramp down")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),10) $(PORT)")
+    field(EGU,  "wfm-steps/s")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:RampDown-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:RampDown-I") {
+    field(DESC, "Target mode ramp down")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),10) $(PORT)")
+    field(EGU,  "wfm-steps/s")
+
+    field(PINI, "YES")
+}
+
+## Target mode steps per count
+record(longout, "$(Sys)$(Dev)Cmd:StepsCount-Out") {
+    field(DESC, "Steps per count")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),11) $(PORT)")
+    field(EGU,  "SPC")
+
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)Val:StepsCount-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(longin, "$(Sys)$(Dev)Val:StepsCount-I") {
+    field(DESC, "Steps per count")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),11) $(PORT)")
+    field(EGU,  "SPC")
+
+    field(PINI, "YES")
+}

@@ -48,7 +48,35 @@ send_str {
     out "\$2";
 }
 
-read_pins {
+get_pins {
     out "x";
     in "x %(\$1DB:Output5-I.A)1d%(\$1DB:Input4-I.A)1d"
 }
+
+get_setting {
+    out "Y\$2?";
+    in "Y\$2=%d";
+}
+
+set_setting {
+    out "Y\$2=%d";
+}
+
+park {
+    out "Y1=1";
+    wait 400;
+}
+
+unpark {
+    out "Y1=0";
+}
+
+init_flash {
+    out "Y1=2";
+}
+
+init_default {
+    out "Y1=3";
+}
+
+

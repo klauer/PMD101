@@ -529,9 +529,8 @@ record(longout, "$(Sys)$(Dev)Cmd:ReadPins-Cmd") {
     field(DESC, "Read inputs/outputs")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto get_pins($(Sys)$(Dev)) $(PORT)")
-    field(TPRO, $(DEBUG=0))
 
-    info(autosaveFields_pass0, "VAL")
+    field(SCAN, "1 second")
 }
 
 record(calc, "$(Sys)$(Dev)DB:Output5-I") {

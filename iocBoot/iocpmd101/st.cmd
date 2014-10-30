@@ -1,4 +1,5 @@
 #!../../bin/linux-x86/pmdTest
+## Piezomotor PMD101 IOC startup script example
 
 < envPaths
 
@@ -30,13 +31,13 @@ dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(Dev),PORT=$(ASYN_P),DE
 asynSetTraceMask("$(PMD_P)", -1, 0x01)
 asynSetTraceMask("$(ASYN_P)", -1, 0x01)
 
-asynSetTraceIOMask("$(PMD_P)", 0, 0xff)
-asynSetTraceIOMask("$(ASYN_P)", 0, 0xff)
+# asynSetTraceIOMask("$(PMD_P)", 0, 0xff)
+# asynSetTraceIOMask("$(ASYN_P)", 0, 0xff)
 
-#asynSetTraceMask("$(PMD_P)", -1, 0x010)
-#asynSetTraceMask("$(ASYN_P)", -1, 0x010)
-# < save_restore.cmd
+< save_restore.cmd
 
 # var streamDebug 1
 iocInit()
 
+create_monitor_set("info_settings.req", 30)
+create_monitor_set("info_positions.req", 15)

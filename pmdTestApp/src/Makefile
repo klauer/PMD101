@@ -20,10 +20,12 @@ pmdTest_DBD += stream.dbd
 pmdTest_DBD += pmd101.dbd
 pmdTest_DBD += motorSupport.dbd calcSupport.dbd 
 pmdTest_DBD += drvAsynIPPort.dbd asyn.dbd
+pmdTest_DBD += system.dbd
+pmdTest_DBD += asSupport.dbd
 
 # Add all the support libraries needed by this IOC
 # Note: pmd101 must come before motor, due to copied asynMotorController/etc
-pmdTest_LIBS += pmd101 stream asyn calc motor
+pmdTest_LIBS += pmd101 stream asyn calc motor autosave
 
 # pmdTest_registerRecordDeviceDriver.cpp derives from pmdTest.dbd
 pmdTest_SRCS += pmdTest_registerRecordDeviceDriver.cpp

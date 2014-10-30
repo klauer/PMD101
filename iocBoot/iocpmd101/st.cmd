@@ -25,10 +25,13 @@ asynOctetSetInputEos("$(ASYN_P)", 0, "\r")
 pmdCreateController("$(PMD_P)", "$(ASYN_P)", 100, 250)
 
 dbLoadTemplate("motors.sub")
-dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(Dev),PORT=$(ASYN_P),DEBUG=0")
+dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(Dev),PORT=$(ASYN_P),DEBUG=1")
 
 asynSetTraceMask("$(PMD_P)", -1, 0x01)
 asynSetTraceMask("$(ASYN_P)", -1, 0x01)
+
+asynSetTraceIOMask("$(PMD_P)", 0, 0xff)
+asynSetTraceIOMask("$(ASYN_P)", 0, 0xff)
 
 #asynSetTraceMask("$(PMD_P)", -1, 0x010)
 #asynSetTraceMask("$(ASYN_P)", -1, 0x010)

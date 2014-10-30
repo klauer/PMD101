@@ -1,3 +1,7 @@
+ExtraInput = Ignore;
+ReplyTimeout = 1000;
+ReadTimeout = 500;
+
 get_ver {
     out "?";
     in "%#s";
@@ -6,11 +10,6 @@ get_ver {
 get_status {
     out "u";
     in "u %(\$1DB:Sts1-I)1d%(\$1DB:Sts2-I)1d%(\$1DB:Sts3-I)1d%(\$1DB:Sts4-I)1d";
-}
-
-get_param_int {
-    out "Y\$2?";
-    in "Y\$2=%d";
 }
 
 set_wfm_res {
@@ -53,6 +52,11 @@ get_pins {
     in "x %(\$1DB:Output5-I.A)1d%(\$1DB:Input4-I.A)1d"
 }
 
+get_setting_int {
+    out "Y\$2?";
+    in "Y\$2=%d";
+}
+
 get_setting {
     out "Y\$2?";
     in "Y\$2=%d";
@@ -60,6 +64,7 @@ get_setting {
 
 set_setting {
     out "Y\$2=%d";
+    wait 200;
 }
 
 park {
@@ -79,4 +84,10 @@ init_default {
     out "Y1=3";
 }
 
-
+get_enctype {
+    @mismatch {
+        in "Y13=%d, %#*s";
+    }
+    out "Y13?";
+    in "Y13=%d";
+}

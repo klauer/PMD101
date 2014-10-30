@@ -2,7 +2,7 @@
 record(stringin, "$(Sys)$(Dev)Val:Ver-I") {
     field(DTYP, "stream")
     field(INP,  "@pmd101.proto get_ver($(Sys)$(Dev)) $(PORT)")
-    field(PINI, "NO")
+    field(PINI, "YES")
     field(TPRO, $(DEBUG=0))
 }
 
@@ -11,12 +11,12 @@ record(stringin, "$(Sys)$(Dev)Cmd:GetSts-Cmd") {
     field(DTYP, "stream")
     field(INP,  "@pmd101.proto get_status($(Sys)$(Dev)) $(PORT)")
     field(PINI, "YES")
-    field(TPRO, $(DEBUG=0))
+
+    field(SCAN, "1 second")
 }
 
 ## Status byte 1
 record(longin, "$(Sys)$(Dev)DB:Sts1-I") {
-    field(TPRO, $(DEBUG=0))
     field(FLNK, "$(Sys)$(Dev)DB:Sts1-FOut_")
 }
 
@@ -29,31 +29,30 @@ record(fanout, "$(Sys)$(Dev)DB:Sts1-FOut_") {
 
 record(calc, "$(Sys)$(Dev)Sts:ComErr-I") {
     field(DESC, "Host frame error/send buffer full")
-    field(INPA, "$(Sys)$(Dev)DB:Sts1-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts1-I PP MS")
     field(CALC, "(A & 8) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:SensorErr-I") {
     field(DESC, "Sensor error detected")
-    field(INPA, "$(Sys)$(Dev)DB:Sts1-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts1-I PP MS")
     field(CALC, "(A & 4) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:V48Low-I") {
     field(DESC, "48V supply below limit")
-    field(INPA, "$(Sys)$(Dev)DB:Sts1-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts1-I PP MS")
     field(CALC, "(A & 2) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:CmdWarning-I") {
     field(DESC, "Unknown command")
-    field(INPA, "$(Sys)$(Dev)DB:Sts1-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts1-I PP MS")
     field(CALC, "(A & 1) != 0")
 }
 
 ## Status byte 2
 record(longin, "$(Sys)$(Dev)DB:Sts2-I") {
-    field(TPRO, $(DEBUG=0))
     field(FLNK, "$(Sys)$(Dev)DB:Sts2-FOut_")
 }
 
@@ -66,25 +65,24 @@ record(fanout, "$(Sys)$(Dev)DB:Sts2-FOut_") {
 
 record(calc, "$(Sys)$(Dev)Sts:Reset-I") {
     field(DESC, "Driver was reset")
-    field(INPA, "$(Sys)$(Dev)DB:Sts2-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts2-I PP MS")
     field(CALC, "(A & 8) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:XLim-I") {
     field(DESC, "I/O port limit switch hit")
-    field(INPA, "$(Sys)$(Dev)DB:Sts2-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts2-I PP MS")
     field(CALC, "(A & 2) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:XRun-I") {
     field(DESC, "Analog run mode active")
-    field(INPA, "$(Sys)$(Dev)DB:Sts2-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts2-I PP MS")
     field(CALC, "(A & 1) != 0")
 }
 
 ## Status byte 3
 record(longin, "$(Sys)$(Dev)DB:Sts3-I") {
-    field(TPRO, $(DEBUG=0))
     field(FLNK, "$(Sys)$(Dev)DB:Sts3-FOut_")
 }
 
@@ -97,31 +95,30 @@ record(fanout, "$(Sys)$(Dev)DB:Sts3-FOut_") {
 
 record(calc, "$(Sys)$(Dev)Sts:Overheat-I") {
     field(DESC, "Driver overheated")
-    field(INPA, "$(Sys)$(Dev)DB:Sts3-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts3-I PP MS")
     field(CALC, "(A & 8) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:TgtLimit-I") {
     field(DESC, "Encoder limit reached")
-    field(INPA, "$(Sys)$(Dev)DB:Sts3-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts3-I PP MS")
     field(CALC, "(A & 4) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:TgtMode-I") {
     field(DESC, "Closed-loop target mode")
-    field(INPA, "$(Sys)$(Dev)DB:Sts3-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts3-I PP MS")
     field(CALC, "(A & 2) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:IndexMode-I") {
     field(DESC, "Index/home mode")
-    field(INPA, "$(Sys)$(Dev)DB:Sts3-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts3-I PP MS")
     field(CALC, "(A & 1) != 0")
 }
 
 ## Status byte 4
 record(longin, "$(Sys)$(Dev)DB:Sts4-I") {
-    field(TPRO, $(DEBUG=0))
     field(FLNK, "$(Sys)$(Dev)DB:Sts4-FOut_")
 }
 
@@ -134,25 +131,25 @@ record(fanout, "$(Sys)$(Dev)DB:Sts4-FOut_") {
 
 record(calc, "$(Sys)$(Dev)Sts:Parked-I") {
     field(DESC, "Motor is parked")
-    field(INPA, "$(Sys)$(Dev)DB:Sts4-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts4-I PP MS")
     field(CALC, "(A & 8) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:TgtStop-I") {
     field(DESC, "Motion stopped at target")
-    field(INPA, "$(Sys)$(Dev)DB:Sts4-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts4-I PP MS")
     field(CALC, "(A & 4) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:Forward-I") {
     field(DESC, "Motion direction")
-    field(INPA, "$(Sys)$(Dev)DB:Sts4-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts4-I PP MS")
     field(CALC, "(A & 2) != 0")
 }
 
 record(calc, "$(Sys)$(Dev)Sts:Running-I") {
     field(DESC, "Currently running")
-    field(INPA, "$(Sys)$(Dev)DB:Sts4-Val PP MS")
+    field(INPA, "$(Sys)$(Dev)DB:Sts4-I PP MS")
     field(CALC, "(A & 1) != 0")
 }
 
@@ -324,6 +321,7 @@ record(longout, "$(Sys)$(Dev)Cmd:Speed-Out") {
     field(DRVH, 2500)
 
     field(FLNK, "$(Sys)$(Dev)Val:Speed-I")
+    field(TPRO, $(DEBUG=0))
     info(autosaveFields_pass0, "VAL STAT SEVR")
 }
 
@@ -439,6 +437,7 @@ record(longout, "$(Sys)$(Dev)Cmd:RawDelay-Out") {
 
     field(LOPR, 128)
     field(HOPR, 4194240)
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:RawDelay-I")
     info(autosaveFields_pass0, "VAL")
@@ -520,6 +519,7 @@ record(longout, "$(Sys)$(Dev)Cmd:RawOutputs-Out") {
 
     field(LOPR, 0)
     field(HOPR, 7)
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Cmd:ReadPins-Cmd")
     info(autosaveFields_pass0, "VAL")
@@ -529,7 +529,7 @@ record(longout, "$(Sys)$(Dev)Cmd:ReadPins-Cmd") {
     field(DESC, "Read inputs/outputs")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto get_pins($(Sys)$(Dev)) $(PORT)")
-    field(PINI, "YES")
+    field(TPRO, $(DEBUG=0))
 
     info(autosaveFields_pass0, "VAL")
 }
@@ -616,7 +616,6 @@ record(calc, "$(Sys)$(Dev)Val:Supply-I") {
 record(longout, "$(Sys)$(Dev)Cmd:Park") {
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto park($(Sys)$(Dev)) $(PORT)")
-    field(PINI, "YES")
     field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
@@ -625,7 +624,6 @@ record(longout, "$(Sys)$(Dev)Cmd:Park") {
 record(longout, "$(Sys)$(Dev)Cmd:Unpark") {
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto unpark($(Sys)$(Dev)) $(PORT)")
-    field(PINI, "YES")
     field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
@@ -635,7 +633,6 @@ record(longout, "$(Sys)$(Dev)Cmd:Unpark") {
 record(longout, "$(Sys)$(Dev)Cmd:InitFlash") {
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto init_flash($(Sys)$(Dev)) $(PORT)")
-    field(PINI, "YES")
     field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
@@ -644,7 +641,6 @@ record(longout, "$(Sys)$(Dev)Cmd:InitFlash") {
 record(longout, "$(Sys)$(Dev)Cmd:InitDefault") {
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto init_default($(Sys)$(Dev)) $(PORT)")
-    field(PINI, "YES")
     field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Cmd:GetSts-Cmd")
@@ -654,7 +650,7 @@ record(longout, "$(Sys)$(Dev)Cmd:InitDefault") {
 record(mbbi, "$(Sys)$(Dev)Val:ExtLim-I") {
     field(DESC, "External limit config")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),2) $(PORT)")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),2) $(PORT)")
 
     field(ZRVL, 0)
     field(ONVL, 1)
@@ -670,7 +666,7 @@ record(mbbi, "$(Sys)$(Dev)Val:ExtLim-I") {
 }
 
 record(mbbo, "$(Sys)$(Dev)Cmd:ExtLim-Out") {
-    field(DESC, "setting")
+    field(DESC, "External limit config")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),2) $(PORT)")
 
@@ -683,7 +679,7 @@ record(mbbo, "$(Sys)$(Dev)Cmd:ExtLim-Out") {
     field(ONST, "Active low")
     field(TWST, "Active low")
     field(THST, "Active high")
-
+    
     field(FLNK, "$(Sys)$(Dev)Val:ExtLim-I")
     info(autosaveFields_pass0, "VAL")
 }
@@ -697,6 +693,7 @@ record(longout, "$(Sys)$(Dev)Cmd:TgtLimA-Out") {
 
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:TgtLimA-I")
     info(autosaveFields_pass0, "VAL")
@@ -705,7 +702,7 @@ record(longout, "$(Sys)$(Dev)Cmd:TgtLimA-Out") {
 record(longin, "$(Sys)$(Dev)Val:TgtLimA-I") {
     field(DESC, "Target soft lower limit A")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),3) $(PORT)")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),3) $(PORT)")
     field(EGU,  "Counts")
 
     field(PINI, "YES")
@@ -720,6 +717,7 @@ record(longout, "$(Sys)$(Dev)Cmd:TgtLimB-Out") {
 
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:TgtLimB-I")
     info(autosaveFields_pass0, "VAL")
@@ -728,7 +726,7 @@ record(longout, "$(Sys)$(Dev)Cmd:TgtLimB-Out") {
 record(longin, "$(Sys)$(Dev)Val:TgtLimB-I") {
     field(DESC, "Target soft lower limit B")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),4) $(PORT)")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),4) $(PORT)")
     field(EGU,  "Counts")
 
     field(PINI, "YES")
@@ -742,8 +740,12 @@ record(longout, "$(Sys)$(Dev)Cmd:Deadband-Out") {
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),5) $(PORT)")
     field(EGU,  "Counts")
 
+    field(LOPR, 0)
+    field(HOPR, 65535)
+
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:Deadband-I")
     info(autosaveFields_pass0, "VAL")
@@ -752,8 +754,11 @@ record(longout, "$(Sys)$(Dev)Cmd:Deadband-Out") {
 record(longin, "$(Sys)$(Dev)Val:Deadband-I") {
     field(DESC, "Closed-loop deadband")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),5) $(PORT)")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),5) $(PORT)")
     field(EGU,  "Counts")
+
+    field(LOPR, 0)
+    field(HOPR, 65535)
 
     field(PINI, "YES")
 }
@@ -761,9 +766,9 @@ record(longin, "$(Sys)$(Dev)Val:Deadband-I") {
 
 ## Encoder direction
 record(mbbi, "$(Sys)$(Dev)Val:EncDir-I") {
-    field(DESC, "External limit config")
+    field(DESC, "Encoder direction")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),6) $(PORT)")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),6) $(PORT)")
 
     field(ZRVL, 0)
     field(ONVL, 1)
@@ -775,7 +780,7 @@ record(mbbi, "$(Sys)$(Dev)Val:EncDir-I") {
 }
 
 record(mbbo, "$(Sys)$(Dev)Cmd:EncDir-Out") {
-    field(DESC, "setting")
+    field(DESC, "Encoder direction")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),6) $(PORT)")
 
@@ -794,10 +799,14 @@ record(longout, "$(Sys)$(Dev)Cmd:MinSpd-Out") {
     field(DESC, "Target mode min speed")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),7) $(PORT)")
-    field(EGU,  "wfm-steps/s")
+    field(EGU,  "wf-st/s")  ## waveform steps/sec
 
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+
+    field(LOPR, 0)
+    field(HOPR, 65535)
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:MinSpd-I")
     info(autosaveFields_pass0, "VAL")
@@ -806,9 +815,11 @@ record(longout, "$(Sys)$(Dev)Cmd:MinSpd-Out") {
 record(longin, "$(Sys)$(Dev)Val:MinSpd-I") {
     field(DESC, "Target mode min speed")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),7) $(PORT)")
-    field(EGU,  "wfm-steps/s")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),7) $(PORT)")
+    field(EGU,  "wf-st/s")
 
+    field(LOPR, 0)
+    field(HOPR, 65535)
     field(PINI, "YES")
 }
 
@@ -817,11 +828,14 @@ record(longout, "$(Sys)$(Dev)Cmd:MaxSpd-Out") {
     field(DESC, "Target mode max speed")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),8) $(PORT)")
-    field(EGU,  "wfm-steps/s")
+    field(EGU,  "wf-st/s")
 
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+    field(TPRO, $(DEBUG=0))
 
+    field(LOPR, 0)
+    field(HOPR, 65535)
     field(FLNK, "$(Sys)$(Dev)Val:MaxSpd-I")
     info(autosaveFields_pass0, "VAL")
 }
@@ -829,9 +843,11 @@ record(longout, "$(Sys)$(Dev)Cmd:MaxSpd-Out") {
 record(longin, "$(Sys)$(Dev)Val:MaxSpd-I") {
     field(DESC, "Target mode max speed")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),8) $(PORT)")
-    field(EGU,  "wfm-steps/s")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),8) $(PORT)")
+    field(EGU,  "wf-st/s")
 
+    field(LOPR, 0)
+    field(HOPR, 65535)
     field(PINI, "YES")
 }
 
@@ -840,10 +856,11 @@ record(longout, "$(Sys)$(Dev)Cmd:RampUp-Out") {
     field(DESC, "Target mode ramp up")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),9) $(PORT)")
-    field(EGU,  "wfm-steps/s-ms")
+    field(EGU,  "wf-st/s-ms")
 
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:RampUp-I")
     info(autosaveFields_pass0, "VAL")
@@ -852,8 +869,8 @@ record(longout, "$(Sys)$(Dev)Cmd:RampUp-Out") {
 record(longin, "$(Sys)$(Dev)Val:RampUp-I") {
     field(DESC, "Target mode ramp up")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),9) $(PORT)")
-    field(EGU,  "wfm-steps/s-ms")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),9) $(PORT)")
+    field(EGU,  "wf-st/s-ms")
 
     field(PINI, "YES")
 }
@@ -863,10 +880,13 @@ record(longout, "$(Sys)$(Dev)Cmd:RampDown-Out") {
     field(DESC, "Target mode ramp down")
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),10) $(PORT)")
-    field(EGU,  "wfm-steps/s")
+    field(EGU,  "wf-st/s")
+    field(LOPR, 0)
+    field(HOPR, 65535)
 
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:RampDown-I")
     info(autosaveFields_pass0, "VAL")
@@ -875,8 +895,10 @@ record(longout, "$(Sys)$(Dev)Cmd:RampDown-Out") {
 record(longin, "$(Sys)$(Dev)Val:RampDown-I") {
     field(DESC, "Target mode ramp down")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),10) $(PORT)")
-    field(EGU,  "wfm-steps/s")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),10) $(PORT)")
+    field(EGU,  "wf-st/s")
+    field(LOPR, 0)
+    field(HOPR, 65535)
 
     field(PINI, "YES")
 }
@@ -887,9 +909,12 @@ record(longout, "$(Sys)$(Dev)Cmd:StepsCount-Out") {
     field(DTYP, "stream")
     field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),11) $(PORT)")
     field(EGU,  "SPC")
+    field(LOPR, 0)
+    field(HOPR, 4294967295)
 
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
+    field(TPRO, $(DEBUG=0))
 
     field(FLNK, "$(Sys)$(Dev)Val:StepsCount-I")
     info(autosaveFields_pass0, "VAL")
@@ -898,8 +923,97 @@ record(longout, "$(Sys)$(Dev)Cmd:StepsCount-Out") {
 record(longin, "$(Sys)$(Dev)Val:StepsCount-I") {
     field(DESC, "Steps per count")
     field(DTYP, "stream")
-    field(INP,  "@pmd101.proto get_setting($(Sys)$(Dev),11) $(PORT)")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),11) $(PORT)")
     field(EGU,  "SPC")
+    field(LOPR, 0)
+    field(HOPR, 4294967295)
 
     field(PINI, "YES")
+}
+
+## Target mode model
+record(mbbi, "$(Sys)$(Dev)Val:TgtMode-I") {
+    field(DESC, "Target mode model")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_setting_int($(Sys)$(Dev),12) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(THVL, 3)
+
+    field(ZRST, "Fast")
+    field(ONST, "Avoid overshoot fwd")
+    field(TWST, "Avoid overshoot rev")
+    field(THST, "Avoid overshoot both")
+
+    field(PINI, "YES")
+}
+
+record(mbbo, "$(Sys)$(Dev)Cmd:TgtMode-Out") {
+    field(DESC, "Target mode model")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),12) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(THVL, 3)
+
+    field(ZRST, "Fast")
+    field(ONST, "Avoid overshoot fwd")
+    field(TWST, "Avoid overshoot rev")
+    field(THST, "Avoid overshoot both")
+
+    field(FLNK, "$(Sys)$(Dev)Val:TgtMode-I")
+    info(autosaveFields_pass0, "VAL")
+}
+
+## Encoder type
+record(mbbi, "$(Sys)$(Dev)Val:EncType-I") {
+    field(DESC, "Encoder type")
+    field(DTYP, "stream")
+    field(INP,  "@pmd101.proto get_enctype($(Sys)$(Dev)) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(THVL, 8)
+    field(FRVL, 16)
+    field(FVVL, 24)
+    field(SXVL, 32)
+
+    field(ZRST, "No encoder")
+    field(ONST, "Quadrature")
+    field(TWST, "Analog")
+    field(THST, "2-wire SSi (8-bit)")
+    field(FRST, "2-wire SSi (16-bit)")
+    field(FVST, "2-wire SSi (24-bit)")
+    field(SXST, "2-wire SSi (32-bit)")
+    field(PINI, "YES")
+}
+
+record(mbbo, "$(Sys)$(Dev)Cmd:EncType-Out") {
+    field(DESC, "Encoder type")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto set_setting($(Sys)$(Dev),13) $(PORT)")
+
+    field(ZRVL, 0)
+    field(ONVL, 1)
+    field(TWVL, 2)
+    field(THVL, 8)
+    field(FRVL, 16)
+    field(FVVL, 24)
+    field(SXVL, 32)
+
+    field(ZRST, "No encoder")
+    field(ONST, "Quadrature")
+    field(TWST, "Analog")
+    field(THST, "2-wire SSi (8-bit)")
+    field(FRST, "2-wire SSi (16-bit)")
+    field(FVST, "2-wire SSi (24-bit)")
+    field(SXST, "2-wire SSi (32-bit)")
+
+    field(FLNK, "$(Sys)$(Dev)Val:EncType-I")
+    info(autosaveFields_pass0, "VAL")
 }

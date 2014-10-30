@@ -2,6 +2,8 @@ ExtraInput = Ignore;
 ReplyTimeout = 1000;
 ReadTimeout = 500;
 
+std_wait = 50;
+
 get_ver {
     out "?";
     in "%#s";
@@ -14,6 +16,7 @@ get_status {
 
 set_wfm_res {
     out "C%d";
+    wait $std_wait;
 }
 
 get_int {
@@ -23,6 +26,7 @@ get_int {
 
 set_int {
     out "\$2 %d";
+    wait $std_wait;
 }
 
 get_speed {
@@ -32,10 +36,12 @@ get_speed {
 
 set_wfmres {
     out "\$2 %.2d";
+    wait $std_wait;
 }
 
 set_int_j {
     out "\$2 %.2d; J0";
+    wait $std_wait;
 }
 
 sync_int {
@@ -45,6 +51,7 @@ sync_int {
 
 send_str {
     out "\$2";
+    wait $std_wait;
 }
 
 get_pins {
@@ -74,14 +81,17 @@ park {
 
 unpark {
     out "Y1=0";
+    wait $std_wait;
 }
 
 init_flash {
     out "Y1=2";
+    wait 500;
 }
 
 init_default {
     out "Y1=3";
+    wait 500;
 }
 
 get_enctype {
@@ -90,4 +100,16 @@ get_enctype {
     }
     out "Y13?";
     in "Y13=%d";
+}
+
+write_flash {
+    out "Y32?";
+    wait 500;
+    in "Y32=0 Flash OK";
+}
+
+reset {
+    out "Y41?";
+    in "Y41=0 Reset";
+    wait 5000;
 }

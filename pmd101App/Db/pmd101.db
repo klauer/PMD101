@@ -463,7 +463,7 @@ record(calc, "$(Sys)$(Dev)Val:Delay-Calc") {
 record(bo, "$(Sys)$(Dev)Cmd:WriteFlash-Cmd") {
     field(DESC, "Write settings to flash")
     field(DTYP, "stream")
-    field(OUT,  "@pmd101.proto send_str($(Sys)$(Dev),W) $(PORT)")
+    field(OUT,  "@pmd101.proto write_flash($(Sys)$(Dev)) $(PORT)")
     field(STAT, "NO_ALARM")
     field(SEVR, "NO_ALARM")
 
@@ -1016,4 +1016,49 @@ record(mbbo, "$(Sys)$(Dev)Cmd:EncType-Out") {
 
     field(FLNK, "$(Sys)$(Dev)Val:EncType-I")
     info(autosaveFields_pass0, "VAL")
+}
+
+## Reset
+record(bo, "$(Sys)$(Dev)Cmd:Reset") {
+    field(DESC, "Reset the device")
+    field(DTYP, "stream")
+    field(OUT,  "@pmd101.proto reset($(Sys)$(Dev)) $(PORT)")
+    field(STAT, "NO_ALARM")
+    field(SEVR, "NO_ALARM")
+
+    field(FLNK, "$(Sys)$(Dev)DB:Settings-FOut")
+}
+
+record(fanout, "$(Sys)$(Dev)DB:Settings-FOut") {
+    field(LNK1, "$(Sys)$(Dev)Val:Waveform-I")
+    field(LNK2, "$(Sys)$(Dev)Val:WfmRes-I")
+    field(LNK3, "$(Sys)$(Dev)Val:Speed-I")
+    field(LNK4, "$(Sys)$(Dev)Val:IndexMode-I")
+    field(LNK5, "$(Sys)$(Dev)Val:Res-I")
+    field(LNK6, "$(Sys)$(Dev)Val:RawDelay-I")
+    field(FLNK, "$(Sys)$(Dev)DB:Settings2-FOut_")
+}
+
+record(fanout, "$(Sys)$(Dev)DB:Settings2-FOut_") {
+    field(LNK1, "$(Sys)$(Dev)Val:ReadFlash-I")
+    field(LNK2, "$(Sys)$(Dev)Val:ExtLim-I")
+    field(LNK3, "$(Sys)$(Dev)Val:TgtLimA-I")
+    field(LNK4, "$(Sys)$(Dev)Val:TgtLimB-I")
+    field(LNK5, "$(Sys)$(Dev)Val:Deadband-I")
+    field(LNK6, "$(Sys)$(Dev)Val:EncDir-I")
+    field(FLNK, "$(Sys)$(Dev)DB:Settings3-FOut_")
+}
+
+record(fanout, "$(Sys)$(Dev)DB:Settings3-FOut_") {
+    field(LNK1, "$(Sys)$(Dev)Val:MinSpd-I")
+    field(LNK2, "$(Sys)$(Dev)Val:MaxSpd-I")
+    field(LNK3, "$(Sys)$(Dev)Val:RampUp-I")
+    field(LNK4, "$(Sys)$(Dev)Val:RampDown-I")
+    field(LNK5, "$(Sys)$(Dev)Val:StepsCount-I")
+    field(LNK6, "$(Sys)$(Dev)Val:TgtMode-I")
+    field(FLNK, "$(Sys)$(Dev)DB:Settings4-FOut_")
+}
+
+record(fanout, "$(Sys)$(Dev)DB:Settings4-FOut_") {
+    field(LNK1, "$(Sys)$(Dev)Cmd:ReadPins-Cmd")
 }

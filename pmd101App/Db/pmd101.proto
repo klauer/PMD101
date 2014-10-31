@@ -113,3 +113,10 @@ reset {
     in "Y41=0 Reset";
     wait 5000;
 }
+
+open_loop_pos {
+    out "+%d";
+}
+open_loop_neg {
+    out "-%d";
+}

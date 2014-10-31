@@ -81,17 +81,15 @@ static void pmdCreateControllerCallFunc(const iocshArgBuf *args)
   pmdCreateController(args[0].sval, args[1].sval, args[2].ival, args[3].ival);
 }
 
-#if 0
 ///// pmdConfigureAxis
 /** Configures an pmdAxis object.
   * Configuration command, called directly or from iocsh
   * \param[in] portName          The name of the controller's asyn port
   * \param[in] axis              The axis
-  * \param[in] movingPollPeriod  The time in ms between polls when any axis is moving
-  * \param[in] idlePollPeriod    The time in ms between polls when no axis is moving 
+  * \param[in] encRes            The encoder resolution
   */
 extern "C" int pmdConfigureAxis(const char *portName, int axisNum,
-                                      int movingPollPeriod, int idlePollPeriod)
+                                float enc_res)
 {
 
   pmdController *controller;
@@ -105,37 +103,31 @@ extern "C" int pmdConfigureAxis(const char *portName, int axisNum,
     return 1;
   }
 
-  axis->configure();
+  axis->setEncoderResolution(enc_res);
+  return 0;
 }
 
 /** Code for iocsh registration */
-static const iocshArg pmdConfigureAxisArg0 = {"Port name", iocshArgString};
-static const iocshArg pmdConfigureAxisArg1 = {"PMD101 port name", iocshArgString};
-static const iocshArg pmdConfigureAxisArg2 = {"RS485 address", iocshArgInt};
-static const iocshArg pmdConfigureAxisArg3 = {"Number of axes", iocshArgInt};
-static const iocshArg pmdConfigureAxisArg4 = {"Moving poll period (ms)", iocshArgInt};
-static const iocshArg pmdConfigureAxisArg5 = {"Idle poll period (ms)", iocshArgInt};
+static const iocshArg pmdConfigureAxisArg0 = {"PMD101 port name", iocshArgString};
+static const iocshArg pmdConfigureAxisArg1 = {"Axis number", iocshArgInt};
+static const iocshArg pmdConfigureAxisArg2 = {"Encoder resolution", iocshArgDouble};
 static const iocshArg * const pmdConfigureAxisArgs[] = {&pmdConfigureAxisArg0,
-                                                                 &pmdConfigureAxisArg1,
-                                                                 &pmdConfigureAxisArg2,
-                                                                 &pmdConfigureAxisArg3,
-                                                                 &pmdConfigureAxisArg4,
-                                                                 &pmdConfigureAxisArg5
-                                                                };
+                                                        &pmdConfigureAxisArg1,
+                                                        &pmdConfigureAxisArg2
+                                                        };
 
-static const iocshFuncDef pmdConfigureAxisDef = {"pmdConfigureAxis", 5, pmdConfigureAxisArgs};
+static const iocshFuncDef pmdConfigureAxisDef = {"pmdConfigureAxis", 3, pmdConfigureAxisArgs};
 static void pmdConfigureAxisCallFunc(const iocshArgBuf *args)
 {
-  pmdConfigureAxis(args[0].sval, args[1].sval, args[2].ival, args[3].ival, args[4].ival, args[5].ival);
+  pmdConfigureAxis(args[0].sval, args[1].ival, args[2].dval);
 }
-#endif
 
 
 /***********************************************************************/
 static void pmd101MotorRegister(void)
 {
   iocshRegister(&pmdCreateControllerDef, pmdCreateControllerCallFunc);
-  //iocshRegister(&pmdConfigureAxisDef, pmdConfigureAxisCallFunc);
+  iocshRegister(&pmdConfigureAxisDef, pmdConfigureAxisCallFunc);
 }
 
 extern "C" {

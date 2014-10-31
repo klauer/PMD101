@@ -280,12 +280,16 @@ asynStatus pmdController::writeReadInt(const char *command, int &value, char del
     input[nread] = 0;
 
     char *ptr = &input[0];
-    do {
-      ptr++;
-    } while (*ptr != delim && *ptr != 0);
+
+    if (delim != '\0') {
+      do {
+        ptr++;
+      } while (*ptr != delim && *ptr != 0);
+    }
 
     if (*ptr != 0) {
       value = atoi(ptr);
+      status = asynSuccess;
     } else {
       value = 0;
       status = asynError;

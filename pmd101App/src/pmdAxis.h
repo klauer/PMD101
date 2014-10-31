@@ -27,6 +27,7 @@ public:
   asynStatus setUIntDigitalParam(int index, epicsUInt32 value);
 
   /* And these are specific to this class: */
+  asynStatus setEncoderResolution(double res);
   asynStatus queryStatus();
 
   int position_to_counts(double position);

@@ -1,4 +1,4 @@
-#!../../bin/linux-x86/pmdTest
+#!../../bin/linux-x86_64/pmdTest
 ## Piezomotor PMD101 IOC startup script example
 
 < envPaths
@@ -8,31 +8,57 @@ dbLoadDatabase("$(TOP)/dbd/pmdTest.dbd",0,0)
 pmdTest_registerRecordDeviceDriver(pdbbase) 
 
 epicsEnvSet(STREAM_PROTOCOL_PATH, ".:$(PMD101)/pmd101App/Db")
-epicsEnvSet(Sys     , "IOC:")
-epicsEnvSet(Dev     , "PMD:")
-epicsEnvSet(PMD_IP  , "10.0.0.11")
-epicsEnvSet(PMD_PORT, 4005)
-epicsEnvSet(ASYN_P  , "IP1")
-epicsEnvSet(PMD_P   , "PMD1")
+epicsEnvSet(Sys     , "ZP:")
+epicsEnvSet(DevX    , "TpaX:")
+epicsEnvSet(DevY    , "TpaY:")
+epicsEnvSet(DevZ    , "TpaZ:")
+epicsEnvSet(PMD_IP  , "10.3.2.184")
+# epicsEnvSet(PMD_PORTX, 4005)
+# epicsEnvSet(PMD_PORTY, 4006)
+# epicsEnvSet(PMD_PORTZ, 4007)
+epicsEnvSet(PMD_PORTX, 954)
+epicsEnvSet(PMD_PORTY, 955)
+epicsEnvSet(PMD_PORTZ, 956)
+epicsEnvSet(ASYN_PX , "IPX")
+epicsEnvSet(PMD_PX  , "PMDX")
+epicsEnvSet(ASYN_PY , "IPY")
+epicsEnvSet(PMD_PY  , "PMDY")
+epicsEnvSet(ASYN_PZ , "IPZ")
+epicsEnvSet(PMD_PZ  , "PMDZ")
 epicsEnvSet(AS      , "IOC:PMD:AS:")
 
 # drvAsynIPPortConfigure 'port name' 'host:port [protocol]' priority 'disable auto-connect' noProcessEos
-drvAsynIPPortConfigure("$(ASYN_P)", "$(PMD_IP):$(PMD_PORT)", 0, 0, 0)
+drvAsynIPPortConfigure("$(ASYN_PX)", "$(PMD_IP):$(PMD_PORTX)", 0, 0, 0)
+drvAsynIPPortConfigure("$(ASYN_PY)", "$(PMD_IP):$(PMD_PORTY)", 0, 0, 0)
+drvAsynIPPortConfigure("$(ASYN_PZ)", "$(PMD_IP):$(PMD_PORTZ)", 0, 0, 0)
 
-asynOctetSetOutputEos("$(ASYN_P)", 0, "\r")
-asynOctetSetInputEos("$(ASYN_P)", 0, "\r")
+asynOctetSetOutputEos("$(ASYN_PX)", 0, "\r")
+asynOctetSetInputEos("$(ASYN_PX)", 0, "\r")
+asynOctetSetOutputEos("$(ASYN_PY)", 0, "\r")
+asynOctetSetInputEos("$(ASYN_PY)", 0, "\r")
+asynOctetSetOutputEos("$(ASYN_PZ)", 0, "\r")
+asynOctetSetInputEos("$(ASYN_PZ)", 0, "\r")
 
 # PMDCreateController(AllMotion port name, asyn port name, Moving poll period (ms), Idle poll period (ms))
-pmdCreateController("$(PMD_P)", "$(ASYN_P)", 100, 250)
+pmdCreateController("$(PMD_PX)", "$(ASYN_PX)", 100, 250)
+pmdCreateController("$(PMD_PY)", "$(ASYN_PY)", 100, 250)
+pmdCreateController("$(PMD_PZ)", "$(ASYN_PZ)", 100, 250)
+
+# pmdConfigureAxis("$(PMD_PX)", 0, 0.005)
+# pmdConfigureAxis("$(PMD_PY)", 0, 0.005)
+# pmdConfigureAxis("$(PMD_PZ)", 0, 0.005)
 
 dbLoadTemplate("motors.sub")
-dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(Dev),PORT=$(ASYN_P),DEBUG=1")
+dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(DevX),PORT=$(ASYN_PX),DEBUG=1")
+dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(DevY),PORT=$(ASYN_PY),DEBUG=1")
+dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(DevZ),PORT=$(ASYN_PZ),DEBUG=1")
 
-asynSetTraceMask("$(PMD_P)", -1, 0x01)
-asynSetTraceMask("$(ASYN_P)", -1, 0x01)
-
-# asynSetTraceIOMask("$(PMD_P)", 0, 0xff)
-# asynSetTraceIOMask("$(ASYN_P)", 0, 0xff)
+asynSetTraceMask("$(PMD_PX)", -1, 0x01)
+asynSetTraceMask("$(ASYN_PX)", -1, 0x01)
+asynSetTraceMask("$(PMD_PY)", -1, 0x01)
+asynSetTraceMask("$(ASYN_PY)", -1, 0x01)
+asynSetTraceMask("$(PMD_PZ)", -1, 0x01)
+asynSetTraceMask("$(ASYN_PZ)", -1, 0x01)
 
 < save_restore.cmd
 

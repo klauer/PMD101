@@ -12,7 +12,7 @@ record(stringin, "$(Sys)$(Dev)Cmd:GetSts-Cmd") {
     field(INP,  "@pmd101.proto get_status($(Sys)$(Dev)) $(PORT)")
     field(PINI, "YES")
 
-    field(SCAN, "1 second")
+    field(SCAN, ".1 second")
 }
 
 ## Status byte 1
@@ -1060,4 +1060,19 @@ record(fanout, "$(Sys)$(Dev)DB:Settings3-FOut_") {
 
 record(fanout, "$(Sys)$(Dev)DB:Settings4-FOut_") {
     field(LNK1, "$(Sys)$(Dev)Cmd:ReadPins-Cmd")
+}
+
+## Open-loop movement
+record(ao, "$(Sys)$(Dev)Cmd:OpenPos") {
+    field(DESC, "Move open-loop steps (+)")
+    field(OUT,  "@pmd101.proto open_loop_pos($(Sys)$(Dev)) $(PORT)")
+
+    info(autosaveFields_pass0, "VAL")
+}
+
+record(ao, "$(Sys)$(Dev)Cmd:OpenNeg") {
+    field(DESC, "Move open-loop steps (-)")
+    field(OUT,  "@pmd101.proto open_loop_neg($(Sys)$(Dev)) $(PORT)")
+
+    info(autosaveFields_pass0, "VAL")
 }

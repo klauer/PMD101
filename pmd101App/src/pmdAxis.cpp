@@ -34,8 +34,11 @@ asynStatus pmdAxis::poll(bool *moving) {
   }
 
   int running;
-  if (pc_->writeReadInt("*", running) == asynSuccess) {
-    *moving = (bool)running;
+  if (pc_->writeReadInt("*", running, '\0') == asynSuccess) {
+    if (moving_ && !running) {
+      motionFinished();
+    }
+    *moving = (bool)(running != 0);
   }
 
   // setDoubleParam(pc_->motorVelocity_, vel);
@@ -53,7 +56,6 @@ asynStatus pmdAxis::setEncoderPosition(double position)
 }
 
 asynStatus pmdAxis::queryStatus() {
-  // if (pc_->writeRead(response, command) == asynSuccess) {
   return asynSuccess;
 }
 
@@ -68,6 +70,10 @@ asynStatus pmdAxis::stop(double acceleration)
   return pc_->write("S");
 }
 
+asynStatus pmdAxis::setEncoderResolution(double enc_res) {
+  return pc_->setDoubleParam(0, pc_->motorResolution_, enc_res);
+}
+
 asynStatus pmdAxis::home(double min_velocity, double max_velocity, double acceleration, int forwards) {
   return asynError;
 }
@@ -75,7 +81,7 @@ asynStatus pmdAxis::home(double min_velocity, double max_velocity, double accele
 int pmdAxis::position_to_counts(double position) {
   double res;
   pc_->getDoubleParam(axis_num_, pc_->motorResolution_, &res);
-
+  
   if (res < 1e-10)
     return 0.0;
   else
@@ -95,7 +101,8 @@ asynStatus pmdAxis::move(double position, int relative, double min_velocity, dou
     driverName, __func__, axis_num_, 
     position, relative);
  
-  asynStatus ret = pc_->write("T%d", position_to_counts(position));
+  // asynStatus ret = pc_->write("T%d", position_to_counts(position));
+  asynStatus ret = pc_->write("T%d", (int)(position));
 
   if (ret == asynSuccess)
     moving_ = true;

@@ -26,7 +26,10 @@ pmdController::pmdController(const char *portName, const char *asynPortName,
   if (!addToList(portName, this)) {
     printf("%s:%s: Init failed", driverName, portName);
     return;
+  } else {
+    printf("%s: initializing controller on port %s\n", driverName, portName);
   }
+
 
   // Write-only
   createParam(PMD_PSTR_KILL_ALL          ,    asynParamInt32,  &param_kill_all_);
@@ -38,7 +41,7 @@ pmdController::pmdController(const char *portName, const char *asynPortName,
     printf("%d %s\n", i, pname);
   }
 #endif
-  
+
   timeout_ = 1.0;
 
   setIntegerParam(motorStatusHasEncoder_, 1);
@@ -67,9 +70,9 @@ pmdController::pmdController(const char *portName, const char *asynPortName,
 
   // Create the axis
   axis_ = new pmdAxis(this, 0);
-  
+
   startPoller(movingPollPeriod/1000., idlePollPeriod/1000., 2);
-  
+
 }
 
 asynStatus pmdController::poll()
@@ -80,7 +83,7 @@ asynStatus pmdController::poll()
 /** Called when asyn clients call pasynFloat64->write().
   * Extracts the function and axis number from pasynUser.
   * Sets the value in the parameter library.
-  * Calls any registered callbacks for this pasynUser->reason and address.  
+  * Calls any registered callbacks for this pasynUser->reason and address.
   *
   * \param[in] pasynUser asynUser structure that encodes the reason and address.
   * \param[in] value     Value to write. */
@@ -91,7 +94,7 @@ asynStatus pmdController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   pmdAxis *pAxis = getAxis(pasynUser);
   const char *paramName = "(unset)";
 
-  if (!pAxis) 
+  if (!pAxis)
     return asynError;
 
   /* Fetch the parameter string name for possible use in debugging */
@@ -110,16 +113,16 @@ asynStatus pmdController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
     /* Call base class method */
     status = asynMotorController::writeFloat64(pasynUser, value);
   }
-  
+
   /* Do callbacks so higher layers see any changes */
   callParamCallbacks(pAxis->axisNo_);
-  if (status) 
-    asynPrint(pasynUser, ASYN_TRACE_ERROR, 
-        "%s:%s: error, status=%d function=%s (%d), value=%f\n", 
+  if (status)
+    asynPrint(pasynUser, ASYN_TRACE_ERROR,
+        "%s:%s: error, status=%d function=%s (%d), value=%f\n",
         driverName, __func__, status, paramName, function, value);
-  else    
-    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
-        "%s:%s: function=%s (%d), value=%f\n", 
+  else
+    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
+        "%s:%s: function=%s (%d), value=%f\n",
         driverName, __func__, paramName, function, value);
   return status;
 }
@@ -128,7 +131,7 @@ asynStatus pmdController::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
   * Extracts the function and axis number from pasynUser.
   * Sets the value in the parameter library.
   *
-  * Calls any registered callbacks for this pasynUser->reason and address.  
+  * Calls any registered callbacks for this pasynUser->reason and address.
   * \param[in] pasynUser asynUser structure that encodes the reason and address.
   * \param[in] value     Value to write. */
 asynStatus pmdController::writeUInt32Digital(asynUser *pasynUser, epicsUInt32 value, epicsUInt32 mask)
@@ -146,7 +149,7 @@ asynStatus pmdController::writeUInt32Digital(asynUser *pasynUser, epicsUInt32 va
   status = setUIntDigitalParam(pAxis->axisNo_, function, value, mask);
 
 #if DEBUG
-  printf("%s:%s: mask=%x function=%s (%d), value=%d\n", 
+  printf("%s:%s: mask=%x function=%s (%d), value=%d\n",
         driverName, __func__, mask, paramName, function, value);
 #endif
 
@@ -155,16 +158,16 @@ asynStatus pmdController::writeUInt32Digital(asynUser *pasynUser, epicsUInt32 va
     /* Call base class method */
     status = asynMotorController::writeUInt32Digital(pasynUser, value, mask);
   }
-  
+
   /* Do callbacks so higher layers see any changes */
   callParamCallbacks(pAxis->axisNo_);
-  if (status) 
-    asynPrint(pasynUser, ASYN_TRACE_ERROR, 
-        "%s:%s: error, status=%d function=%s (%d), value=%d\n", 
+  if (status)
+    asynPrint(pasynUser, ASYN_TRACE_ERROR,
+        "%s:%s: error, status=%d function=%s (%d), value=%d\n",
         driverName, __func__, status, paramName, function, value);
-  else    
-    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
-        "%s:%s: function=%s (%d), value=%d\n", 
+  else
+    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
+        "%s:%s: function=%s (%d), value=%d\n",
         driverName, __func__, paramName, function, value);
   return status;
 }
@@ -175,7 +178,7 @@ asynStatus pmdController::writeUInt32Digital(asynUser *pasynUser, epicsUInt32 va
   *
   * \param[in] pasynUser asynUser structure that encodes the reason and address.
   * \param[in] value     Value to write. */
-asynStatus pmdController::writeOctet(asynUser *pasynUser, const char *value, 
+asynStatus pmdController::writeOctet(asynUser *pasynUser, const char *value,
                                      size_t nChars, size_t *nActual)
 {
   int addr=0;
@@ -187,12 +190,12 @@ asynStatus pmdController::writeOctet(asynUser *pasynUser, const char *value,
   getParamName(function, &paramName);
 
 #if DEBUG
-  printf("%s:%s: function=%s (%d), value=%s\n", 
+  printf("%s:%s: function=%s (%d), value=%s\n",
         driverName, __func__, paramName, function, value);
 #endif
 
   status = getAddress(pasynUser, &addr);
-  if (status != asynSuccess) 
+  if (status != asynSuccess)
     return status;
 
   /* Set the parameter in the parameter library. */
@@ -204,13 +207,13 @@ asynStatus pmdController::writeOctet(asynUser *pasynUser, const char *value,
     return asynPortDriver::writeOctet(pasynUser, value, nChars, nActual);
   }
 
-  if (status) 
-      epicsSnprintf(pasynUser->errorMessage, pasynUser->errorMessageSize, 
-                "%s:%s: status=%d, function=%d, value=%s", 
+  if (status)
+      epicsSnprintf(pasynUser->errorMessage, pasynUser->errorMessageSize,
+                "%s:%s: status=%d, function=%d, value=%s",
                 driverName, __func__, status, function, value);
-  else        
-      asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
-            "%s:%s: function=%d, value=%s\n", 
+  else
+      asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
+            "%s:%s: function=%d, value=%s\n",
             driverName, __func__, function, value);
 
   return status;
@@ -233,7 +236,7 @@ asynStatus pmdController::writeInt32(asynUser *pasynUser, epicsInt32 value)
   getParamName(function, &paramName);
 
 #if DEBUG
-  printf("%s:%s: function=%s (%d), value=%d\n", 
+  printf("%s:%s: function=%s (%d), value=%d\n",
         driverName, __func__, paramName, function, value);
 #endif
 
@@ -245,16 +248,16 @@ asynStatus pmdController::writeInt32(asynUser *pasynUser, epicsInt32 value)
     /* Call base class method */
     status = asynMotorController::writeInt32(pasynUser, value);
   }
-  
+
   /* Do callbacks so higher layers see any changes */
   callParamCallbacks(pAxis->axisNo_);
-  if (status) 
-    asynPrint(pasynUser, ASYN_TRACE_ERROR, 
-        "%s:%s: error, status=%d function=%s (%d), value=%d\n", 
+  if (status)
+    asynPrint(pasynUser, ASYN_TRACE_ERROR,
+        "%s:%s: error, status=%d function=%s (%d), value=%d\n",
         driverName, __func__, status, paramName, function, value);
-  else    
-    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER, 
-        "%s:%s: function=%s (%d), value=%d\n", 
+  else
+    asynPrint(pasynUser, ASYN_TRACEIO_DRIVER,
+        "%s:%s: function=%s (%d), value=%d\n",
         driverName, __func__, paramName, function, value);
   return status;
 }
@@ -273,9 +276,9 @@ asynStatus pmdController::writeReadInt(const char *command, int &value, char del
                                        command, strlen(command),
                                        input, PMD_LEN - 1,
                                        timeout_, &nwrite, &nread, &eomReason);
-  
+
   unlock();
-  
+
   if (status == asynSuccess) {
     input[nread] = 0;
 

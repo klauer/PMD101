@@ -1,7 +1,7 @@
 file "$(PMD101)/db/asyn_motor.db" {
 pattern
-{         P,  M,              DESC,      DTYP,DIR, VELO, VBAS, ACCL, BDST, BVEL, BACC, PORT, ADDR, MRES,  PREC, EGU, TWV, DHLM,  DLLM,   INIT}
-{   ZP:TpaX:, m1,     "TPA X", asynMotor,  0,     5,     5,    1,    0,    0,    0,    PMDX, 0,    0.020, 3,    um,  1.0, 10000, -10000, 0}
-{   ZP:TpaY:, m1,     "TPA Y", asynMotor,  0,     5,     5,    1,    0,    0,    0,    PMDY, 0,    0.020, 3,    um,  1.0, 10000, -10000, 0}
-{   ZP:TpaZ:, m1,     "TPA Z", asynMotor,  0,     5,     5,    1,    0,    0,    0,    PMDZ, 0,    0.020, 3,    um,  1.0, 10000, -10000, 0}
+{                           P,  M,       DESC,      DTYP,DIR, VELO, VBAS, ACCL, BDST, BVEL, BACC, PORT, ADDR, MRES,  PREC, EGU, TWV, DHLM,  DLLM,   INIT}
+{   "XF:03IDC-ES{ZpTpa-Ax:X}", Mtr,     "zpx", asynMotor,  0,     5,     5,    1,    0,    0,    0,    PMDX, 0,    0.020, 3,    um,  1.0, 10000, -10000, 0}
+{   "XF:03IDC-ES{ZpTpa-Ax:Y}", Mtr,     "zpy", asynMotor,  0,     5,     5,    1,    0,    0,    0,    PMDY, 0,    0.020, 3,    um,  1.0, 10000, -10000, 0}
+{   "XF:03IDC-ES{ZpTpa-Ax:Z}", Mtr,     "zpz", asynMotor,  0,     5,     5,    1,    0,    0,    0,    PMDZ, 0,    0.020, 3,    um,  1.0, 10000, -10000, 0}
 }

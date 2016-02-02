@@ -27,9 +27,12 @@ TEMPLATE_TOP=$(EPICS_BASE)/templates/makeBaseApp/top
 SUPPORT=/epics/support
 PMD101=$(TOP)
 
-ASYN=$(SUPPORT)/asyn/4-21
+# Debian packages should have 6-8-1 now
+#
+ASYN=$(SUPPORT)/asyn/4-26
 # Motor 6-8-1 is where asynMotorController/etc come from
-MOTOR=$(SUPPORT)/motor/6-8-1
+MOTOR=$(SUPPORT)/motor/6-9
+STREAM=$(TOP)
 
 # EPICS_BASE usually appears last so other apps can override stuff:
 EPICS_BASE=/usr/lib/epics

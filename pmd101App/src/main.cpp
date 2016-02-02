@@ -24,7 +24,7 @@ pmdController* findByPortName(const char *portName) {
     pmdNode *pNode;
     static const char *functionName = "findByPortName";
 
-    // Find this 
+    // Find this
     if (!pmdListInitialized) {
         printf("%s:%s: ERROR, pmd list not initialized\n",
             driverName, functionName);
@@ -39,8 +39,7 @@ pmdController* findByPortName(const char *portName) {
         pNode = (pmdNode*)ellNext((ELLNODE*)pNode);
     }
 
-    printf("%s: pmd on port %s not found\n",
-        driverName, portName);
+    printf("%s: pmd on port %s not found\n", driverName, portName);
     return NULL;
 }
 
@@ -50,9 +49,9 @@ pmdController* findByPortName(const char *portName) {
 /** Creates a new pmdController object.
   * Configuration command, called directly or from iocsh
   * \param[in] portName          The name of the asyn port that will be created for this driver
-  * \param[in] asynPortName      The name of the drvAsynIPPPort that was created previously to connect to the pmd controller 
+  * \param[in] asynPortName      The name of the drvAsynIPPPort that was created previously to connect to the pmd controller
   * \param[in] movingPollPeriod  The time in ms between polls when any axis is moving
-  * \param[in] idlePollPeriod    The time in ms between polls when no axis is moving 
+  * \param[in] idlePollPeriod    The time in ms between polls when no axis is moving
   */
 extern "C" int pmdCreateController(const char *portName, const char *asynPortName,
                                    int movingPollPeriod, int idlePollPeriod)
@@ -96,7 +95,7 @@ extern "C" int pmdConfigureAxis(const char *portName, int axisNum,
   if ((controller = findByPortName(portName)) == NULL) {
     return 1;
   }
-  
+
   pmdAxis *axis = controller->getAxis(axisNum);
   if (!axis) {
     printf("Bad axis number #%d (axis count = %d)", axisNum, controller->getAxisCount());

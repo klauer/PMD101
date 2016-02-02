@@ -23,9 +23,14 @@ hxnPmd_DBD += drvAsynIPPort.dbd asyn.dbd
 hxnPmd_DBD += system.dbd
 hxnPmd_DBD += asSupport.dbd
 
+hxnPmd_DBD += devIocStats.dbd
+hxnPmd_DBD += caPutLog.dbd
+
 # Add all the support libraries needed by this IOC
 # Note: pmd101 must come before motor, due to copied asynMotorController/etc
 hxnPmd_LIBS += pmd101 stream asyn calc motor autosave
+hxnPmd_LIBS += devIocStats
+hxnPmd_LIBS += caPutLog
 
 # hxnPmd_registerRecordDeviceDriver.cpp derives from hxnPmd.dbd
 hxnPmd_SRCS += hxnPmd_registerRecordDeviceDriver.cpp

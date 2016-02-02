@@ -1,6 +1,17 @@
 #!../../bin/linux-x86_64/hxnPmd
 ## Piezomotor PMD101 IOC startup script example
 
+epicsEnvSet("ENGINEER",  "klauer x3615")
+epicsEnvSet("LOCATION",  "740 3IDC RG-C1")
+epicsEnvSet("DEVICE_LOCATION",  "740 3IDC RG-I4")
+
+epicsEnvSet("EPICS_CA_AUTO_ADDR_LIST", "NO")
+epicsEnvSet("EPICS_CA_ADDR_LIST", "10.3.0.255")
+
+epicsEnvSet("SYS", "XF:03IDC-ES")
+# epicsEnvSet("IOCNAME", "anc350") # set by softioc init.d script
+epicsEnvSet("IOC_P", "$(SYS){IOC:$(IOCNAME)}")
+
 < envPaths
 
 ## Register all support components
@@ -58,6 +69,7 @@ dbLoadTemplate("motors.sub")
 dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(DevX),PORT=$(ASYN_PX),DEBUG=1")
 dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(DevY),PORT=$(ASYN_PY),DEBUG=1")
 dbLoadRecords("$(PMD101)/db/pmd101.db", "Sys=$(Sys),Dev=$(DevZ),PORT=$(ASYN_PZ),DEBUG=1")
+dbLoadRecords("$(EPICS_BASE)/db/iocAdminSoft.db", "IOC=$(IOC_P)")
 
 asynSetTraceMask("$(PMD_PX)", -1, 0x01)
 asynSetTraceMask("$(ASYN_PX)", -1, 0x01)
@@ -80,3 +92,7 @@ dbpf("$(Sys)$(DevY)Cmd:TgtLimA-Out", -15000000)
 dbpf("$(Sys)$(DevY)Cmd:TgtLimB-Out", 15000000)
 dbpf("$(Sys)$(DevZ)Cmd:TgtLimA-Out", -15000000)
 dbpf("$(Sys)$(DevZ)Cmd:TgtLimB-Out", 15000000)
+
+cd ${TOP}
+dbl > ./records.dbl
+system "cp ./records.dbl /cf-update/$HOSTNAME.$IOCNAME.dbl"
